@@ -1,5 +1,7 @@
-import logo from './logo.svg';
-import './App.css';
+import * as React from "react";
+import logo from "./logo.svg";
+import "./App.css";
+import { Box } from "@chakra-ui/react";
 
 function App() {
   return (
@@ -20,6 +22,10 @@ function App() {
       </header>
     </div>
   );
+}
+
+function Example() {
+  return <Box p="5" maxW="320px" borderWidth="1px"></Box>;
 }
 
 export default App;
