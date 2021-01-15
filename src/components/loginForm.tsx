@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import {
   Flex,
   Box,
@@ -7,18 +7,89 @@ import {
   FormLabel,
   Input,
   Button,
-  useColorMode,
   Link,
   Text,
   Stack,
   Checkbox,
-  IconButton,
+  useToast,
+  toast,
+  createStandaloneToast,
 } from "@chakra-ui/react";
-import { SunIcon, MoonIcon } from "@chakra-ui/icons";
+import API from "../api";
+import Cookies from "js-cookie";
+import ThemeSelector from "./themeSelector";
+import { useHistory } from "react-router-dom";
 
-const VARIANT_COLOR = "teal";
+export default function LoginApp() {
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [isLoading, setIsLoading] = useState(false);
+  const [error, setError] = useState("");
 
-const LoginArea = () => {
+  const VARIANT_COLOR = "teal";
+  let api = API();
+  const history = useHistory();
+
+  const authenticate = async () => {
+    return new Promise<void>((resolve, reject) => {
+      api.authenticate(email, password).then((response: any) => {
+        if (response.ok) {
+          // Send success alert
+          const toast = createStandaloneToast();
+          toast({
+            title: "Success!",
+            description: "You're logged in.",
+            status: "success",
+            duration: 3000,
+            isClosable: true,
+          });
+
+          const token = response.data.access_token;
+          api.setAccessToken(token);
+          Cookies.set("accessToken", token, { expires: 60 });
+
+          resolve();
+        } else {
+          reject();
+        }
+      });
+    });
+  };
+
+  const handleLogin = async (event: any) => {
+    event.preventDefault();
+    if (email === "" || password === "") {
+      const toast = createStandaloneToast();
+      toast({
+        title: "An error occured.",
+        description: "Please enter an email and password.",
+        status: "error",
+        duration: 3000,
+        isClosable: true,
+      });
+    } else {
+      setIsLoading(true);
+      try {
+        await authenticate();
+        setIsLoading(false);
+        history.push("/");
+      } catch (error) {
+        const toast = createStandaloneToast();
+        toast({
+          title: "An error occured.",
+          description: "Email or password is incorrect.",
+          status: "error",
+          duration: 3000,
+          isClosable: true,
+        });
+        setError("Invalid email or password");
+        setEmail("");
+        setPassword("");
+        setIsLoading(false);
+      }
+    }
+  };
+
   return (
     <Flex minHeight="100vh" width="full" align="center" justifyContent="center">
       <Box
@@ -32,62 +103,43 @@ const LoginArea = () => {
       >
         <ThemeSelector />
         <Box p={4}>
-          <LoginHeader />
-          <LoginForm />
+          <Box textAlign="center">
+            <Heading>Sign In to Your Account</Heading>
+          </Box>
+          <Box my={8} textAlign="left">
+            <form onSubmit={handleLogin}>
+              <FormControl>
+                <FormLabel>Email address</FormLabel>
+                <Input
+                  type="email"
+                  placeholder="Enter your email address"
+                  value={email}
+                  onChange={(event) => setEmail(event.target.value)}
+                />
+              </FormControl>
+
+              <FormControl mt={4}>
+                <FormLabel>Password</FormLabel>
+                <Input
+                  type="password"
+                  placeholder="Enter your password"
+                  value={password}
+                  onChange={(event) => setPassword(event.target.value)}
+                />
+              </FormControl>
+              <Button
+                isLoading={isLoading}
+                type="submit"
+                colorScheme={VARIANT_COLOR}
+                width="full"
+                mt={4}
+              >
+                Sign In
+              </Button>
+            </form>
+          </Box>
         </Box>
       </Box>
     </Flex>
   );
-};
-
-const ThemeSelector = () => {
-  const { colorMode, toggleColorMode } = useColorMode();
-
-  return (
-    <Box textAlign="right" py={4}>
-      <Button onClick={toggleColorMode}>
-        {colorMode === "light" ? <MoonIcon /> : <SunIcon />}
-      </Button>
-    </Box>
-  );
-};
-
-const LoginHeader = () => {
-  return (
-    <Box textAlign="center">
-      <Heading>Sign In to Your Account</Heading>
-    </Box>
-  );
-};
-
-const LoginForm = () => {
-  return (
-    <Box my={8} textAlign="left">
-      <form>
-        <FormControl>
-          <FormLabel>Email address</FormLabel>
-          <Input type="email" placeholder="Enter your email address" />
-        </FormControl>
-
-        <FormControl mt={4}>
-          <FormLabel>Password</FormLabel>
-          <Input type="password" placeholder="Enter your password" />
-        </FormControl>
-        <Stack isInline justifyContent="space-between" mt={4}>
-          <Box>
-            <Checkbox>Remember Me</Checkbox>
-          </Box>
-          <Box>
-            <Link color={`${VARIANT_COLOR}.500`}>Forgot your password?</Link>
-          </Box>
-        </Stack>
-
-        <Button variantColor={VARIANT_COLOR} width="full" mt={4}>
-          Sign In
-        </Button>
-      </form>
-    </Box>
-  );
-};
-
-export default LoginArea;
+}

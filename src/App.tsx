@@ -1,31 +1,35 @@
 import * as React from "react";
 import logo from "./logo.svg";
-import "./App.css";
-import { Box } from "@chakra-ui/react";
+import { Box, Button, Flex } from "@chakra-ui/react";
+import Cookies from "js-cookie";
+import { useHistory } from "react-router-dom";
+import themeSelector from "./components/themeSelector";
+import ThemeSelector from "./components/themeSelector";
 
 function App() {
-  return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
-  );
-}
+  const history = useHistory();
 
-function Example() {
-  return <Box p="5" maxW="320px" borderWidth="1px"></Box>;
+  const handleLogout = () => {
+    Cookies.remove("accessToken");
+    history.push("/login");
+  };
+
+  return (
+    <Flex minHeight="100vh" width="full" align="center" justifyContent="center">
+      <Box
+        borderWidth={1}
+        px={4}
+        width="full"
+        maxWidth="500px"
+        borderRadius={4}
+        textAlign="center"
+        boxShadow="lg"
+      >
+        <ThemeSelector />
+        <Button onClick={handleLogout}>Logout</Button>
+      </Box>
+    </Flex>
+  );
 }
 
 export default App;
