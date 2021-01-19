@@ -7,12 +7,6 @@ import {
   FormLabel,
   Input,
   Button,
-  Link,
-  Text,
-  Stack,
-  Checkbox,
-  useToast,
-  toast,
   createStandaloneToast,
 } from "@chakra-ui/react";
 import API from "../api";
@@ -47,8 +41,8 @@ export default function LoginApp() {
           const token = response.data.access_token;
           api.setAccessToken(token);
           Cookies.set("accessToken", token, { expires: 60 });
-
-          resolve();
+          localStorage.setItem("user", JSON.stringify(response.data));
+          resolve(response.data.username);
         } else {
           reject();
         }
@@ -70,9 +64,12 @@ export default function LoginApp() {
     } else {
       setIsLoading(true);
       try {
-        await authenticate();
-        setIsLoading(false);
-        history.push("/");
+        // Wait for authentication and then redirect to
+        // /p/username profile
+        await authenticate().then((data) => {
+          setIsLoading(false);
+          history.push(`/p/${data}`);
+        });
       } catch (error) {
         const toast = createStandaloneToast();
         toast({

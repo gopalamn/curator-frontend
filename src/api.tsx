@@ -19,9 +19,9 @@ export default () => {
   const authenticate = (email: any, password: any) =>
     api.post("auth/", { email, password });
 
-  const getUser = (user_id: any) =>
+  const getUser = (username: any) =>
     api.get("get_user/", {
-      user_id,
+      username,
     });
 
   const addUser = (

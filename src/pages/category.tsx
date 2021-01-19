@@ -1,12 +1,10 @@
 import React from "react";
 import { CSSReset, ChakraProvider } from "@chakra-ui/react";
-import LoginForm from "../components/loginForm";
 
-export default function Login() {
+export default function Category() {
   return (
     <ChakraProvider>
       <CSSReset />
-      <LoginForm />
     </ChakraProvider>
   );
 }

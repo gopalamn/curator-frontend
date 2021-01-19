@@ -5,7 +5,6 @@ import {
   RouteProps,
   RouteComponentProps,
 } from "react-router-dom";
-import Cookies from "js-cookie";
 
 interface PrivateRouteProps extends RouteProps {
   isAuthenticated: boolean;

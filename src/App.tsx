@@ -1,19 +1,9 @@
 import * as React from "react";
-import logo from "./logo.svg";
-import { Box, Button, Flex } from "@chakra-ui/react";
-import Cookies from "js-cookie";
-import { useHistory } from "react-router-dom";
-import themeSelector from "./components/themeSelector";
+import { Box, Flex } from "@chakra-ui/react";
 import ThemeSelector from "./components/themeSelector";
+import LogoutButton from "./components/logout";
 
 function App() {
-  const history = useHistory();
-
-  const handleLogout = () => {
-    Cookies.remove("accessToken");
-    history.push("/login");
-  };
-
   return (
     <Flex minHeight="100vh" width="full" align="center" justifyContent="center">
       <Box
@@ -22,11 +12,10 @@ function App() {
         width="full"
         maxWidth="500px"
         borderRadius={4}
-        textAlign="center"
         boxShadow="lg"
       >
+        <LogoutButton />
         <ThemeSelector />
-        <Button onClick={handleLogout}>Logout</Button>
       </Box>
     </Flex>
   );

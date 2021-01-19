@@ -2,12 +2,7 @@ import React from "react";
 import ReactDOM from "react-dom";
 import "./index.css";
 import Root from "./pages/rootContainer";
-import {
-  ChakraProvider,
-  ColorModeProvider,
-  ColorModeScript,
-  CSSReset,
-} from "@chakra-ui/react";
+import { ChakraProvider, ColorModeScript, CSSReset } from "@chakra-ui/react";
 import theme from "./theme";
 
 ReactDOM.render(
