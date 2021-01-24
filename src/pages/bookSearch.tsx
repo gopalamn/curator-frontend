@@ -41,7 +41,9 @@ export default function BookSearch() {
     }
   };
 
-  const renderBooks = async () => {};
+  const renderBooks = async () => {
+    return;
+  };
 
   return (
     <Container>

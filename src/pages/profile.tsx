@@ -97,7 +97,9 @@ class Profile extends Component<Props, State> {
 
     return (
       <Box>
-        <Heading size="xs">Books</Heading>
+        <Heading mb={2} size="xs">
+          Books
+        </Heading>
         <HStack>{booksList}</HStack>
       </Box>
     );
@@ -133,18 +135,16 @@ class Profile extends Component<Props, State> {
     let fullname =
       this.state.profileUser.firstname + " " + this.state.profileUser.lastname;
     return (
-      <Box d="flex" flexDir="column" p="2">
-        <Skeleton isLoaded={!this.state.stillLoading}>
+      <Box display="inline-block">
+        <Box d="flex" flexDir="column" py="2" alignItems="center">
           <Avatar
             py="2"
             size="lg"
             name={fullname}
             src={this.state.profileUser.profile_pic}
           />
-        </Skeleton>
-        <Skeleton isLoaded={!this.state.stillLoading}>
           <Text py="2">{fullname}</Text>
-        </Skeleton>
+        </Box>
       </Box>
     );
   };

@@ -11,8 +11,11 @@ class BookCard extends Component<Props> {
     return (
       <Link href={book.link} isExternal>
         <Box
-          maxW="15vw"
-          maxH="40vh"
+          height="35vh"
+          width="19.6875vh"
+          maxW="35vw"
+          maxH="62.222vw"
+          margin="auto"
           borderWidth="1px"
           borderRadius="lg"
           overflow="hidden"
@@ -21,11 +24,11 @@ class BookCard extends Component<Props> {
             src={book.cover_img}
             alt={`${book.title} cover image`}
             objectFit="cover"
-            w="15vw"
-            h="30vh"
+            w="35vw"
+            h="28vh"
           />
           <Box p="2">
-            <Box as="h6" isTruncated>
+            <Box as="h6" fontSize="sm" isTruncated>
               {book.title}
             </Box>
           </Box>
