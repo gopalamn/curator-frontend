@@ -1,9 +1,18 @@
 import React, { Component } from "react";
-import { CSSReset, ChakraProvider } from "@chakra-ui/react";
+import {
+  Avatar,
+  Box,
+  Text,
+  Skeleton,
+  Heading,
+  HStack,
+  Container,
+} from "@chakra-ui/react";
 import NewPost from "../components/NewPost";
-import LogoutButton from "../components/logout";
 import API from "../api";
 import NotFound from "./notFound";
+import NavHeader from "../components/navHeader";
+import BookCard from "../components/bookCard";
 
 type Props = {
   match: any;
@@ -12,6 +21,15 @@ type Props = {
 type State = {
   profileValid: boolean;
   stillLoading: boolean;
+  profileUser: {
+    id: number;
+    email: string;
+    firstname: string;
+    lastname: string;
+    profile_pic: string;
+    username: string;
+  };
+  books: [];
 };
 
 class Profile extends Component<Props, State> {
@@ -23,42 +41,125 @@ class Profile extends Component<Props, State> {
     this.state = {
       profileValid: false,
       stillLoading: true,
+      profileUser: {
+        id: -1,
+        email: "",
+        firstname: "",
+        lastname: "",
+        profile_pic: "",
+        username: "",
+      },
+      books: [],
     };
   }
 
   componentDidMount() {
-    console.log(this.props);
-    this.profileRenderBool();
+    // Loading content of profile requires initial profile load
+    // Hence the .then structure
+    this.profileRenderBool().then(() => {
+      this.fetchBooks();
+      this.setState({ stillLoading: false });
+    });
   }
 
+  // Load user's books into state
+  fetchBooks = () => {
+    return this.api
+      .getUserBooks(this.state.profileUser.id)
+      .then((response: any) => {
+        if (response.ok) {
+          const newBookList: any = [];
+          response.data.forEach((element: any) => {
+            let book = {
+              id: element.book_post_id,
+              book_api_id: element.book_api_id,
+              cover_img: element.cover_img,
+              link: element.link,
+              title: element.title,
+            };
+            newBookList.push(book);
+          });
+          this.setState({ books: newBookList });
+        }
+      });
+  };
+
+  renderBooks = () => {
+    // Don't show anything if the user doesn't have any books
+    if (this.state.books === undefined || this.state.books.length === 0) {
+      return;
+    }
+
+    let booksList: any = [];
+    this.state.books.forEach((element: any) => {
+      booksList.push(<BookCard key={element.id} book={element} />);
+    });
+
+    return (
+      <Box>
+        <Heading size="xs">Books</Heading>
+        <HStack>{booksList}</HStack>
+      </Box>
+    );
+  };
+
+  // Checks if this profile exists
   profileRenderBool = () => {
     let profileUsername = this.props.match.params.name;
-    // let profileUsername = "hi"
-    console.log(profileUsername);
+    // console.log(profileUsername);
     return this.api
       .getUser(profileUsername)
       .then((response: any) => {
-        console.log(response);
+        // console.log(response);
         if (response.ok && response.data.username !== undefined) {
           this.setState({ profileValid: true });
-          this.setState({ stillLoading: false });
-        } else {
-          this.setState({ stillLoading: false });
+          const newProfileUser = {
+            id: response.data.user_id,
+            email: response.data.email,
+            firstname: response.data.firstname,
+            lastname: response.data.lastname,
+            profile_pic: response.data.profile_pic,
+            username: response.data.username,
+          };
+          this.setState({ profileUser: newProfileUser });
         }
       })
       .catch((error: any) => console.warn(error));
   };
 
+  // Loads profile picture from props
+  // TODO: Need to figure out a way to center image on top of name
+  profilePicture = () => {
+    let fullname =
+      this.state.profileUser.firstname + " " + this.state.profileUser.lastname;
+    return (
+      <Box d="flex" flexDir="column" p="2">
+        <Skeleton isLoaded={!this.state.stillLoading}>
+          <Avatar
+            py="2"
+            size="lg"
+            name={fullname}
+            src={this.state.profileUser.profile_pic}
+          />
+        </Skeleton>
+        <Skeleton isLoaded={!this.state.stillLoading}>
+          <Text py="2">{fullname}</Text>
+        </Skeleton>
+      </Box>
+    );
+  };
+  // TODO: Add in loading animation for components
+  // if not yet loaded
   renderProfile = () => {
     if (!this.state.stillLoading) {
-      console.log(this.state.profileValid);
       if (this.state.profileValid) {
         return (
-          <ChakraProvider>
-            <CSSReset />
-            <LogoutButton />
+          <Container>
+            <NavHeader />
+            {this.profilePicture()}
+            {this.renderBooks()}
             <NewPost />
-          </ChakraProvider>
+          </Container>
         );
       } else {
         return <NotFound />;

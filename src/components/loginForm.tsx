@@ -11,7 +11,6 @@ import {
 } from "@chakra-ui/react";
 import API from "../api";
 import Cookies from "js-cookie";
-import ThemeSelector from "./themeSelector";
 import { useHistory } from "react-router-dom";
 
 export default function LoginApp() {
@@ -40,8 +39,11 @@ export default function LoginApp() {
 
           const token = response.data.access_token;
           api.setAccessToken(token);
-          Cookies.set("accessToken", token, { expires: 60 });
-          localStorage.setItem("user", JSON.stringify(response.data));
+          Cookies.set("accessToken", token, { expires: 7 });
+          localStorage.setItem("username", response.data.username);
+          localStorage.setItem("user_id", response.data.user_id);
+          //   console.log(localStorage.getItem("username"))
+          //   console.log(localStorage.getItem("user_id"))
           resolve(response.data.username);
         } else {
           reject();
@@ -88,7 +90,7 @@ export default function LoginApp() {
   };
 
   return (
-    <Flex minHeight="100vh" width="full" align="center" justifyContent="center">
+    <Flex minHeight="80vh" width="full" align="center" justifyContent="center">
       <Box
         borderWidth={1}
         px={4}
@@ -97,8 +99,8 @@ export default function LoginApp() {
         borderRadius={4}
         textAlign="center"
         boxShadow="lg"
+        pt={4}
       >
-        <ThemeSelector />
         <Box p={4}>
           <Box textAlign="center">
             <Heading>Sign In to Your Account</Heading>

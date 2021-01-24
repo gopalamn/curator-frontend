@@ -3,7 +3,10 @@ import Cookies from "js-cookie";
 
 const LOCAL = false;
 
-export default () => {
+export default function API() {
+  // Key stored in environment variable using 'export'
+  let google_api_key = process.env.GOOGLE_API_KEY;
+
   const api = apisauce.create({
     baseURL: LOCAL
       ? "http://127.0.0.1:5000/api/"
@@ -12,6 +15,17 @@ export default () => {
       Authorization: `JWT ${Cookies.get("accessToken")}`,
     },
   });
+
+  const google_books_api = apisauce.create({
+    baseURL: "https://www.googleapis.com/books/v1/",
+  });
+
+  const searchVolumes = (query: any) =>
+    google_books_api.get("volumes", {
+      q: query,
+      key: google_api_key,
+      maxResults: "6",
+    });
 
   const setAccessToken = (token: any) =>
     api.setHeader("Authorization", `JWT ${token}`);
@@ -59,9 +73,9 @@ export default () => {
       books: books_list,
     });
 
-  const getUserBooks = (user_id: any) =>
+  const getUserBooks = (userID: any) =>
     api.get("get_user_books/", {
-      user_id,
+      user_id: userID,
     });
 
   const deleteUserBook = (book_api_id: any) =>
@@ -79,5 +93,6 @@ export default () => {
     addIndividualBooks,
     getUserBooks,
     deleteUserBook,
+    searchVolumes,
   };
-};
+}

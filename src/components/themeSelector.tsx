@@ -5,7 +5,7 @@ const ThemeSelector = () => {
   const { colorMode, toggleColorMode } = useColorMode();
 
   return (
-    <Box textAlign="right" py={4}>
+    <Box py={2}>
       <Button onClick={toggleColorMode}>
         {colorMode === "light" ? <MoonIcon /> : <SunIcon />}
       </Button>

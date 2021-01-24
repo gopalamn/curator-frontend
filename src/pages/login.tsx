@@ -1,12 +1,13 @@
 import React from "react";
-import { CSSReset, ChakraProvider } from "@chakra-ui/react";
+import { Container } from "@chakra-ui/react";
 import LoginForm from "../components/loginForm";
+import NavHeader from "../components/navHeader";
 
 export default function Login() {
   return (
-    <ChakraProvider>
-      <CSSReset />
+    <Container>
+      <NavHeader />
       <LoginForm />
-    </ChakraProvider>
+    </Container>
   );
 }

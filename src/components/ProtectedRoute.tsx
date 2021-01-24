@@ -5,7 +5,11 @@ import {
   RouteProps,
   RouteComponentProps,
 } from "react-router-dom";
+import Cookies from "js-cookie";
 
+// If I need to change this Protected Route to a
+// general solution later, makue use of this interface.
+// Beware that this might cause async issues...
 interface PrivateRouteProps extends RouteProps {
   isAuthenticated: boolean;
 }
@@ -15,7 +19,13 @@ export default class ProtectedRoute extends Component<PrivateRouteProps> {
     return (
       <Route
         render={(props: RouteComponentProps) => {
-          if (!this.props.isAuthenticated) {
+          //   if (!this.props.isAuthenticated) {
+          //     return <Redirect to="/login" />;
+          //   }
+
+          // Hardcoded cookies check here because it was causing
+          // async issues
+          if (!!!Cookies.get("accessToken")) {
             return <Redirect to="/login" />;
           }
 
