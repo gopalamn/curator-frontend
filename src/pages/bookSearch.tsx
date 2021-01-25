@@ -1,5 +1,6 @@
 import {
   Box,
+  Button,
   chakra,
   ChakraProvider,
   Container,
@@ -72,16 +73,18 @@ export default function BookSearch() {
   function renderBooks() {
     let bookCardList: any = [];
     books.forEach((element: any) => {
-      bookCardList.push(<BookCard key={element.id} book={element} />);
+      bookCardList.push(
+        <Skeleton isLoaded={!isLoading}>
+          <BookCard key={element.id} book={element} />
+        </Skeleton>
+      );
     });
 
     return (
       <Box>
-        <Skeleton isLoaded={!isLoading}>
-          <SimpleGrid columns={[2, null, null, 3]} spacing={4}>
-            {bookCardList}
-          </SimpleGrid>
-        </Skeleton>
+        <SimpleGrid columns={[2, 3, 3, 3]} spacing={4}>
+          {bookCardList}
+        </SimpleGrid>
       </Box>
     );
   }
@@ -95,7 +98,7 @@ export default function BookSearch() {
         justifyContent="center"
         alignItems="center"
         textAlign="center"
-        minHeight="40vh"
+        minHeight="50%"
         mb={4}
       >
         <Heading p={10} textAlign="center">
@@ -124,6 +127,7 @@ export default function BookSearch() {
         </form>
       </Box>
       {renderBooks()}
+      <Button>Done</Button>
     </Container>
   );
 }

@@ -8,11 +8,16 @@ type Props = {
 class BookCard extends Component<Props> {
   render() {
     let book = this.props.book;
+    // Helps with jumpiness on mobile Chrome instead of using vh
+    let jsvh = window.innerHeight * 0.01;
+
     return (
       <Link href={book.link} isExternal>
         <Box
-          height="40vh"
-          width="22.5vh"
+          // height="40vh"
+          height={jsvh * 40}
+          // width="20vh"
+          width={jsvh * 20}
           maxW="40vw"
           maxH="71.11vw"
           margin="auto"
@@ -24,10 +29,10 @@ class BookCard extends Component<Props> {
             src={book.cover_img}
             alt={`${book.title} cover image`}
             objectFit="cover"
-            w="35vw"
-            h="30vh"
+            w="100%"
+            h="80%"
           />
-          <Box p="2">
+          <Box p="2" h="20%">
             <Box as="h6" lineHeight="" fontSize="sm" noOfLines={2} isTruncated>
               {book.title}
             </Box>
