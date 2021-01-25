@@ -8,14 +8,12 @@ export default function LogoutButton() {
 
   const handleLogout = async () => {
     Cookies.remove("accessToken");
-    localStorage.clear();
-    console.log("removed cookies");
+    localStorage.removeItem("username");
+    localStorage.removeItem("user_id");
   };
 
   const redirect = async () => {
-    console.log("pre handleLogout");
     await handleLogout();
-    console.log("post handleLogout");
     history.push("/login");
   };
 

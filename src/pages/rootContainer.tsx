@@ -18,7 +18,7 @@ import BookSearch from "./bookSearch";
 type Props = {};
 
 export default class rootContainer extends Component<Props> {
-  loggedInUser = localStorage.getItem("user");
+  loggedInUser = localStorage.getItem("username");
 
   render() {
     return (
@@ -29,13 +29,6 @@ export default class rootContainer extends Component<Props> {
               path="/p/:name"
               render={(routerProps) => <Profile {...routerProps} />}
             />
-            <Route path="/login">
-              {!!Cookies.get("accessToken") ? (
-                <Redirect to={`/p/${this.loggedInUser}`} />
-              ) : (
-                <Login />
-              )}
-            </Route>
             {/* ProtectedRoute method doesn't actuall use the isAuthenticated
             method as of now due to async issues */}
             <ProtectedRoute

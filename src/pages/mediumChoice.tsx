@@ -18,8 +18,6 @@ export default function MediumChoice() {
     history.push("/bookSearch");
   };
 
-  console.log("Came to Medium Choice");
-
   return (
     <Container>
       <NavHeader />
