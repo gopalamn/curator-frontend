@@ -4,6 +4,7 @@ import LogoutButton from "./logout";
 import ThemeSelector from "./themeSelector";
 import { useLocation } from "react-router-dom";
 import ProfileButton from "../components/profileButton";
+import NewPost from "./NewPost";
 
 export default function NavHeader() {
   // TODO: Only show logout when on your own profile page, everywhere else

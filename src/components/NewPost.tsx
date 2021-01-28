@@ -11,16 +11,10 @@ export default function NewPost() {
   };
 
   return (
-    <Box p={4} position="relative">
+    <Box mb={4} position="relative">
       {isAuthenticated && (
-        <Button
-          onClick={handleNewPost}
-          position="absolute"
-          colorScheme="teal"
-          bottom="0"
-          right="0"
-        >
-          New
+        <Button onClick={handleNewPost} colorScheme="teal">
+          New Discovery
         </Button>
       )}
     </Box>

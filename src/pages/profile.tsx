@@ -7,6 +7,9 @@ import {
   Heading,
   HStack,
   Container,
+  SkeletonCircle,
+  Progress,
+  Stack,
 } from "@chakra-ui/react";
 import NewPost from "../components/NewPost";
 import API from "../api";
@@ -76,6 +79,7 @@ class Profile extends Component<Props, State> {
               cover_img: element.cover_img,
               link: element.link,
               title: element.title,
+              linkActive: true,
             };
             newBookList.push(book);
           });
@@ -92,15 +96,25 @@ class Profile extends Component<Props, State> {
 
     let booksList: any = [];
     this.state.books.forEach((element: any) => {
-      booksList.push(<BookCard key={element.id} book={element} />);
+      booksList.push(
+        <Skeleton key={element.id} isLoaded={!this.state.stillLoading}>
+          <BookCard book={element} />
+        </Skeleton>
+      );
     });
+
+    booksList.reverse();
 
     return (
       <Box>
-        <Heading mb={2} size="xs">
-          Books
-        </Heading>
-        <HStack>{booksList}</HStack>
+        <Skeleton isLoaded={!this.state.stillLoading}>
+          <Heading mb={2} size="xs">
+            Books
+          </Heading>
+        </Skeleton>
+        <Stack direction="row" position="relative" overflow="auto">
+          {booksList}
+        </Stack>
       </Box>
     );
   };
@@ -137,13 +151,17 @@ class Profile extends Component<Props, State> {
     return (
       <Box display="inline-block">
         <Box d="flex" flexDir="column" py="2" alignItems="center">
-          <Avatar
-            py="2"
-            size="lg"
-            name={fullname}
-            src={this.state.profileUser.profile_pic}
-          />
-          <Text py="2">{fullname}</Text>
+          <Skeleton isLoaded={!this.state.stillLoading}>
+            <Avatar
+              py="2"
+              size="lg"
+              name={fullname}
+              src={this.state.profileUser.profile_pic}
+            />
+          </Skeleton>
+          <Skeleton isLoaded={!this.state.stillLoading}>
+            <Text py="2">{fullname}</Text>
+          </Skeleton>
         </Box>
       </Box>
     );
@@ -157,13 +175,15 @@ class Profile extends Component<Props, State> {
           <Container>
             <NavHeader />
             {this.profilePicture()}
-            {this.renderBooks()}
             <NewPost />
+            {this.renderBooks()}
           </Container>
         );
       } else {
         return <NotFound />;
       }
+    } else {
+      return <Progress position="absolute" size="xs" isIndeterminate />;
     }
   };
 
