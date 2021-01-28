@@ -10,7 +10,8 @@ export default function LogoutButton() {
     Cookies.remove("accessToken");
     localStorage.removeItem("username");
     localStorage.removeItem("user_id");
-    localStorage.clear();
+    localStorage.removeItem("fullname");
+    // localStorage.clear();
   };
 
   const redirect = async () => {

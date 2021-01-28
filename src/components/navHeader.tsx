@@ -5,6 +5,7 @@ import ThemeSelector from "./themeSelector";
 import { useHistory, useLocation } from "react-router-dom";
 import ProfileButton from "../components/profileButton";
 import Cookies from "js-cookie";
+import ProfileMenu from "./profileMenu";
 
 export default function NavHeader() {
   // TODO: Only show logout when on your own profile page, everywhere else
@@ -47,7 +48,8 @@ export default function NavHeader() {
       </Box>
       <Spacer />
       {!isAuthenticated && <LoginButton />}
-      {isUserProfile ? <LogoutButton /> : <ProfileButton />}
+      <ProfileMenu />
+      {/* {isUserProfile ? <LogoutButton /> : <ProfileButton />} */}
       <ThemeSelector />
     </Flex>
   );

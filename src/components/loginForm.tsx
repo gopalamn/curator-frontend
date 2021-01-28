@@ -39,11 +39,15 @@ export default function LoginApp() {
 
           const token = response.data.access_token;
           api.setAccessToken(token);
-          Cookies.set("accessToken", token, { expires: 7 });
+          console.log(response.data);
+          Cookies.set("accessToken", token, { expires: 60 });
           localStorage.setItem("username", response.data.username);
           localStorage.setItem("user_id", response.data.user_id);
-          //   console.log(localStorage.getItem("username"))
-          //   console.log(localStorage.getItem("user_id"))
+          localStorage.setItem("profile_pic", response.data.profile_pic);
+          localStorage.setItem(
+            "fullname",
+            response.data.firstname + " " + response.data.lastname
+          );
           resolve(response.data.username);
         } else {
           reject();

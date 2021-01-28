@@ -120,7 +120,7 @@ class Profile extends Component<Props, State> {
       <Box>
         <Skeleton isLoaded={!this.state.stillLoading}>
           <Heading mb={2} size="xs">
-            Books
+            📚 Books
           </Heading>
         </Skeleton>
         <Stack direction="row" position="relative" overflow="auto">
