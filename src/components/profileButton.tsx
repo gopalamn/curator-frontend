@@ -8,6 +8,12 @@ export default function ProfileButton() {
   let username = localStorage.getItem("username");
 
   const handleProfile = () => {
+    // I really need to start using redux...
+    let username = localStorage.getItem("username");
+    let user_id = localStorage.getItem("user_id");
+    localStorage.clear();
+    if (username) localStorage.setItem("username", username);
+    if (user_id) localStorage.setItem("user_id", user_id);
     history.push(`/p/${username}`);
   };
 
