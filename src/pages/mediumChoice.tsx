@@ -1,12 +1,4 @@
-import {
-  Box,
-  Button,
-  ChakraProvider,
-  Container,
-  CSSReset,
-  Flex,
-  Heading,
-} from "@chakra-ui/react";
+import { Box, Button, Container, Flex, Heading } from "@chakra-ui/react";
 import React from "react";
 import { useHistory } from "react-router";
 import NavHeader from "../components/navHeader";

@@ -1,10 +1,10 @@
-import { Box, Flex, Heading, Spacer } from "@chakra-ui/react";
+import { Box, Button, Flex, Heading, Spacer } from "@chakra-ui/react";
 import React from "react";
 import LogoutButton from "./logout";
 import ThemeSelector from "./themeSelector";
-import { useLocation } from "react-router-dom";
+import { useHistory, useLocation } from "react-router-dom";
 import ProfileButton from "../components/profileButton";
-import NewPost from "./NewPost";
+import Cookies from "js-cookie";
 
 export default function NavHeader() {
   // TODO: Only show logout when on your own profile page, everywhere else
@@ -12,11 +12,33 @@ export default function NavHeader() {
 
   let location = useLocation();
   let username = localStorage.getItem("username");
+  let isAuthenticated = !!Cookies.get("accessToken");
   let isUserProfile = false;
+  let history = useHistory();
 
   if (location.pathname === `/p/${username}`) {
     isUserProfile = true;
   }
+
+  const handleLogin = () => {
+    history.push("/login");
+  };
+
+  const LoginButton = () => {
+    let isLoginScreen = false;
+    if (location.pathname === "/login") {
+      isLoginScreen = true;
+    }
+    return (
+      <Box py={2}>
+        {!isLoginScreen && (
+          <Button mr="4" onClick={handleLogin}>
+            Login
+          </Button>
+        )}
+      </Box>
+    );
+  };
 
   return (
     <Flex>
@@ -24,6 +46,7 @@ export default function NavHeader() {
         <Heading size="md">Curator</Heading>
       </Box>
       <Spacer />
+      {!isAuthenticated && <LoginButton />}
       {isUserProfile ? <LogoutButton /> : <ProfileButton />}
       <ThemeSelector />
     </Flex>

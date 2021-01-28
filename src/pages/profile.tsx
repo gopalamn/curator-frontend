@@ -5,9 +5,7 @@ import {
   Text,
   Skeleton,
   Heading,
-  HStack,
   Container,
-  SkeletonCircle,
   Progress,
   Stack,
 } from "@chakra-ui/react";
@@ -65,6 +63,18 @@ class Profile extends Component<Props, State> {
     });
   }
 
+  componentDidUpdate(prevProps: any, prevState: any) {
+    // Specifically needed when profile button is clicked on someone
+    // else's page while user is logged in
+    if (prevProps.match.params.name !== this.props.match.params.name) {
+      this.setState({ stillLoading: true });
+      this.profileRenderBool().then(() => {
+        this.fetchBooks();
+        this.setState({ stillLoading: false });
+      });
+    }
+  }
+
   // Load user's books into state
   fetchBooks = () => {
     return this.api
@@ -88,6 +98,7 @@ class Profile extends Component<Props, State> {
       });
   };
 
+  // Displays books
   renderBooks = () => {
     // Don't show anything if the user doesn't have any books
     if (this.state.books === undefined || this.state.books.length === 0) {
@@ -144,7 +155,6 @@ class Profile extends Component<Props, State> {
   };
 
   // Loads profile picture from props
-  // TODO: Need to figure out a way to center image on top of name
   profilePicture = () => {
     let fullname =
       this.state.profileUser.firstname + " " + this.state.profileUser.lastname;

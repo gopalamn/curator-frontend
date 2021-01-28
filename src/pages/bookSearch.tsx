@@ -20,22 +20,25 @@ import BookCard from "../components/bookCard";
 import { useHistory } from "react-router";
 
 export default function BookSearch() {
+  interface bookCart {
+    [key: string]: any;
+  }
+
   const [query, setQuery] = useState("");
   const [isSearchLoading, setisSearchLoading] = useState(false);
   const [isDoneLoading, setIsDoneLoading] = useState(false);
   const [books, setBooks] = useState([]);
-  const [cartBooks, setCartBooks] = useState({});
+  const [cartBooks, setCartBooks] = useState<bookCart>({});
 
   // Used to get around problems with useEffect detecting
-  // dictionary changes in cartBooks. Forces use of storing
-  // checkbox status in local storage
+  // dictionary changes in cartBooks.
   const [countCartBooks, setCountCartBooks] = useState(0);
   const history = useHistory();
   const api = API();
 
   const searchBooks = async () => {
     return api.searchVolumes(query).then((response: any) => {
-      // console.log(response);
+      console.log(response);
 
       let booksList: any = [];
       response.data.items.forEach((element: any) => {
@@ -97,18 +100,17 @@ export default function BookSearch() {
 
     setCartBooks(existingBookList);
 
-    console.log(cartBooks);
-
-    // add / remove selected book from bookCart object
+    // console.log(cartBooks);
   };
 
   function renderBooks() {
     let bookCardList: any = [];
+    // console.log(cartBooks)
 
     books.forEach((element: any) => {
       let isChecked = false;
 
-      if (localStorage.getItem(element.book_api_id + "checked") !== null) {
+      if (cartBooks[element.book_api_id] !== undefined) {
         isChecked = true;
       }
 
@@ -123,13 +125,13 @@ export default function BookSearch() {
                 handleBookSelect(event, element);
 
                 if (event.target.checked) {
-                  localStorage.setItem(
-                    element.book_api_id + "checked",
-                    event.target.checked
-                  );
+                  // localStorage.setItem(
+                  //   element.book_api_id + "checked",
+                  //   event.target.checked
+                  // );
                   setCountCartBooks(countCartBooks + 1);
                 } else if (!event.target.checked) {
-                  localStorage.removeItem(element.book_api_id + "checked");
+                  // localStorage.removeItem(element.book_api_id + "checked");
                   setCountCartBooks(countCartBooks - 1);
                 }
               }}
@@ -194,7 +196,7 @@ export default function BookSearch() {
         cover_img: value[1].cover_img,
         link: value[1].link,
       };
-      localStorage.removeItem(value[1].book_api_id + "checked");
+      // localStorage.removeItem(value[1].book_api_id + "checked");
       setCountCartBooks(0);
       const checkmarkObj = document.getElementById(
         value[1].book_api_id + "checkmark"

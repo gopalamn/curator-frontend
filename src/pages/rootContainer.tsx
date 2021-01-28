@@ -21,10 +21,23 @@ export default class rootContainer extends Component<Props> {
   loggedInUser = localStorage.getItem("username");
 
   render() {
+    // console.log(!!Cookies.get("accessToken"))
     return (
       <Router>
         <Container>
           <Switch>
+            {/* Important to have render here to force cookie status 
+          to re-render */}
+            <Route
+              path="/login"
+              render={() =>
+                !!Cookies.get("accessToken") ? (
+                  <Redirect to={`/p/${this.loggedInUser}`} />
+                ) : (
+                  <Login />
+                )
+              }
+            />
             <Route
               path="/p/:name"
               render={(routerProps) => <Profile {...routerProps} />}
@@ -41,13 +54,7 @@ export default class rootContainer extends Component<Props> {
               component={BookSearch}
               isAuthenticated={!!Cookies.get("accessToken")}
             />
-            <Route path="/login">
-              {!!Cookies.get("accessToken") ? (
-                <Redirect to={`/p/${this.loggedInUser}`} />
-              ) : (
-                <Login />
-              )}
-            </Route>
+
             <ProtectedRoute
               path="/"
               component={App}
