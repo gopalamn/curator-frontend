@@ -32,6 +32,7 @@ export default function MediumChoice() {
   const [isLinkPreviewLoading, setIsLinkPreviewLoading] = useState(false);
   const [linkObj, setLinkObj] = useState({});
   const [showPreview, setShowPreview] = useState(false);
+  const [isAddLinkLoading, setIsAddLinkLoading] = useState(false);
 
   const api = API();
 
@@ -43,11 +44,8 @@ export default function MediumChoice() {
     }
   }, [link]);
 
-  const handleBook = () => {
-    history.push("/bookSearch");
-  };
-
   const handleShowClick = () => {
+    console.log("hit");
     setShowPreview(true);
     handleLinkFetch(link);
   };
@@ -69,21 +67,37 @@ export default function MediumChoice() {
 
     handleLinkFetch(link);
     // console.log(linkObj)
-    api.addLinkPost(linkObj).then((response: any) => {
-      if (response.ok) {
-        let username = localStorage.getItem("username");
-        history.push(`/p/${username}`);
-      } else {
+    setIsAddLinkLoading(true);
+    api
+      .addLinkPost(linkObj)
+      .then((response: any) => {
+        if (response.ok) {
+          let username = localStorage.getItem("username");
+          history.push(`/p/${username}`);
+        } else {
+          const toast = createStandaloneToast();
+          toast({
+            title: "An error occured.",
+            description: "Your link doesn't seem to be secure!",
+            status: "error",
+            duration: 3000,
+            isClosable: true,
+          });
+        }
+        setIsAddLinkLoading(false);
+      })
+      .catch((error) => {
+        console.warn(error);
         const toast = createStandaloneToast();
         toast({
           title: "An error occured.",
-          description: "Your link doesn't seem to be secure!",
+          description: "You're quick! Please try again in a few moments.",
           status: "error",
           duration: 3000,
           isClosable: true,
         });
-      }
-    });
+      });
+    setIsAddLinkLoading(false);
   }
 
   function handleLinkFetch(linkParam: any) {
@@ -91,7 +105,7 @@ export default function MediumChoice() {
     api
       .linkPreview(linkParam)
       .then((response: any) => {
-        // console.log(response)
+        console.log(response);
 
         if (response.ok) {
           let shallowLinkObj = {
@@ -109,7 +123,7 @@ export default function MediumChoice() {
         const toast = createStandaloneToast();
         toast({
           title: "An error occured.",
-          description: "Invalid link, please try again!",
+          description: "You're quick! Please try again in a few moments.",
           status: "error",
           duration: 3000,
           isClosable: true,
@@ -123,6 +137,7 @@ export default function MediumChoice() {
     setIsLinkPreviewLoading(true);
     setLink(event.clipboardData.getData("Text"));
     handleLinkFetch(event.clipboardData.getData("Text"));
+    setShowPreview(true);
   };
 
   function renderLinkCard() {
@@ -164,23 +179,24 @@ export default function MediumChoice() {
                   onChange={(event) => setLink(event.target.value)}
                   onPaste={(event) => handleLinkPaste(event)}
                 />
-                <InputRightElement width={20}>
+                <InputRightElement width={9}>
                   <Button
                     isLoading={isLinkPreviewLoading}
                     size="sm"
                     onClick={handleShowClick}
                   >
-                    Show
+                    👀
                   </Button>
                 </InputRightElement>
               </InputGroup>
-              <FormHelperText>
+              {/* <FormHelperText>
                 Tip: Click Show to see a preview of the link!
-              </FormHelperText>
+              </FormHelperText> */}
             </FormControl>
             <IconButton
               variant="ghost"
               type="submit"
+              isLoading={isAddLinkLoading}
               aria-label="Enter"
               icon={<ChevronRightIcon w={30} h={20} />}
             />

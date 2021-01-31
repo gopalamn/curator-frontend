@@ -1,4 +1,5 @@
-import { Button, Box } from "@chakra-ui/react";
+import { ArrowForwardIcon } from "@chakra-ui/icons";
+import { Button, Box, Text } from "@chakra-ui/react";
 import Cookies from "js-cookie";
 import { useHistory, useLocation } from "react-router-dom";
 
@@ -18,10 +19,16 @@ export default function NewPost() {
   };
 
   return (
-    <Box mb={4} position="relative">
+    <Box mb={4} textAlign="left" position="relative">
       {isAuthenticated && isUserProfile && (
-        <Button onClick={handleNewPost} colorScheme="teal">
-          New Discovery
+        <Button
+          color="purple.500"
+          onClick={handleNewPost}
+          variant="link"
+          colorScheme="teal"
+        >
+          <Text>New Discovery </Text>
+          <ArrowForwardIcon w={8} />
         </Button>
       )}
     </Box>

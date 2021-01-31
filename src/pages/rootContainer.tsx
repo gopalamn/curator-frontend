@@ -55,10 +55,15 @@ export default class rootContainer extends Component<Props> {
               isAuthenticated={!!Cookies.get("accessToken")}
             />
 
-            <ProtectedRoute
+            <Route
               path="/"
-              component={App}
-              isAuthenticated={!!Cookies.get("accessToken")}
+              render={() =>
+                !!Cookies.get("accessToken") ? (
+                  <Redirect to={`/p/${this.loggedInUser}`} />
+                ) : (
+                  <Login />
+                )
+              }
             />
             <Route component={NotFound} />
           </Switch>

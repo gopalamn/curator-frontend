@@ -31,14 +31,7 @@ class BookCard extends Component<Props> {
           />
         </Box>
         <Box p="2" h="25%">
-          <Box
-            as="h6"
-            lineHeight=""
-            fontWeight="light"
-            fontSize="sm"
-            noOfLines={2}
-            isTruncated
-          >
+          <Box as="h6" lineHeight="" fontSize="sm" noOfLines={2} isTruncated>
             {this.book.title}
           </Box>
         </Box>

@@ -8,12 +8,15 @@ import {
   Container,
   Progress,
   Stack,
+  Circle,
 } from "@chakra-ui/react";
 import NewPost from "../components/NewPost";
 import API from "../api";
 import NotFound from "./notFound";
 import NavHeader from "../components/navHeader";
 import BookCard from "../components/bookCard";
+import LinkCard from "../components/linkCard";
+import { CloseIcon, DeleteIcon } from "@chakra-ui/icons";
 
 type Props = {
   match: any;
@@ -31,6 +34,7 @@ type State = {
     username: string;
   };
   books: [];
+  links: [];
 };
 
 class Profile extends Component<Props, State> {
@@ -51,6 +55,7 @@ class Profile extends Component<Props, State> {
         username: "",
       },
       books: [],
+      links: [],
     };
   }
 
@@ -59,6 +64,7 @@ class Profile extends Component<Props, State> {
     // Hence the .then structure
     this.profileRenderBool().then(() => {
       this.fetchBooks();
+      this.fetchLinks();
       this.setState({ stillLoading: false });
     });
   }
@@ -70,10 +76,68 @@ class Profile extends Component<Props, State> {
       this.setState({ stillLoading: true });
       this.profileRenderBool().then(() => {
         this.fetchBooks();
+        this.fetchLinks();
         this.setState({ stillLoading: false });
       });
     }
   }
+
+  // Load user's links into state
+  fetchLinks = () => {
+    return this.api
+      .getUserLinks(this.state.profileUser.id)
+      .then((response: any) => {
+        if (response.ok) {
+          const newLinkList: any = [];
+          response.data.forEach((element: any) => {
+            let userLink = {
+              id: element.link_post_id,
+              link: element.link,
+              title: element.title,
+              img: element.img,
+              description: element.description,
+              hostname: element.hostname,
+            };
+            newLinkList.push(userLink);
+          });
+          this.setState({ links: newLinkList });
+        }
+      });
+  };
+
+  // Displays links
+  renderLinks = () => {
+    // Don't show anything if the user doesn't have any books
+    if (this.state.links === undefined || this.state.links.length === 0) {
+      return;
+    }
+
+    let linksList: any = [];
+    this.state.links.forEach((element: any) => {
+      linksList.push(
+        <Skeleton key={element.id} isLoaded={!this.state.stillLoading}>
+          <Box position="relative">
+            <LinkCard link={element} />
+          </Box>
+        </Skeleton>
+      );
+    });
+
+    linksList.reverse();
+
+    return (
+      <Box>
+        <Skeleton isLoaded={!this.state.stillLoading}>
+          <Heading py={2} size="sm">
+            🔗 Links
+          </Heading>
+        </Skeleton>
+        <Stack direction="row" position="relative" overflow="auto">
+          {linksList}
+        </Stack>
+      </Box>
+    );
+  };
 
   // Load user's books into state
   fetchBooks = () => {
@@ -111,6 +175,9 @@ class Profile extends Component<Props, State> {
         <Skeleton key={element.id} isLoaded={!this.state.stillLoading}>
           <Box position="relative">
             <BookCard book={element} />
+            {/* <Circle zIndex="1" as="button" position="absolute" top={1} right={1} size={5} bg="black" opacity={0.5}>
+                <DeleteIcon width={2} color="white" />
+            </Circle> */}
           </Box>
         </Skeleton>
       );
@@ -121,7 +188,7 @@ class Profile extends Component<Props, State> {
     return (
       <Box>
         <Skeleton isLoaded={!this.state.stillLoading}>
-          <Heading py={2} size="sm">
+          <Heading mt={5} py={2} size="sm">
             📚 Books
           </Heading>
         </Skeleton>
@@ -188,7 +255,10 @@ class Profile extends Component<Props, State> {
             <NavHeader />
             {this.profilePicture()}
             <NewPost />
-            {this.renderBooks()}
+            <Box>{this.renderBooks()}</Box>
+            <Box mt={4} mb={10}>
+              {this.renderLinks()}
+            </Box>
           </Container>
         );
       } else {
