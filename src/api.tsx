@@ -7,6 +7,8 @@ export default function API() {
   // Key stored in environment variable using 'export'
   let google_api_key = process.env.GOOGLE_API_KEY;
 
+  let tmdb_api_key = process.env.TMDB_API_KEY;
+
   const api = apisauce.create({
     baseURL: LOCAL
       ? "http://127.0.0.1:5000/api/"
@@ -19,6 +21,27 @@ export default function API() {
   const google_books_api = apisauce.create({
     baseURL: "https://www.googleapis.com/books/v1/",
   });
+
+  const tmdb_api = apisauce.create({
+    baseURL: "https://api.themoviedb.org/3/",
+  });
+
+  const searchMovies = (q: any) =>
+    tmdb_api.get("search/movie", {
+      api_key: tmdb_api_key,
+      query: q,
+    });
+
+  const tmdb_config = () =>
+    tmdb_api.get("configuration", {
+      api_key: tmdb_api_key,
+    });
+
+  const searchTVShows = (q: any) =>
+    tmdb_api.get("search/tv", {
+      api_key: tmdb_api_key,
+      query: q,
+    });
 
   const searchVolumes = (query: any) =>
     google_books_api.get("volumes", {
@@ -83,6 +106,26 @@ export default function API() {
       book_api_id,
     });
 
+  const linkPreview = (url: any) =>
+    api.get("link_preview/", {
+      url,
+    });
+
+  const addLinkPost = (linkObj: any) =>
+    api.post("new_link_post/", {
+      linkObj,
+    });
+
+  const getUserLinks = (userID: any) =>
+    api.get("get_user_links/", {
+      user_id: userID,
+    });
+
+  const deleteUserLink = (link_post_id: any) =>
+    api.delete("delete_user_link/", {
+      link_post_id,
+    });
+
   return {
     setAccessToken,
     authenticate,
@@ -94,5 +137,12 @@ export default function API() {
     getUserBooks,
     deleteUserBook,
     searchVolumes,
+    searchMovies,
+    searchTVShows,
+    tmdb_config,
+    addLinkPost,
+    linkPreview,
+    getUserLinks,
+    deleteUserLink,
   };
 }

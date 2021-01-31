@@ -9,36 +9,36 @@ type Props = {
 // title, link, linkActive (true/false), cover_img
 class BookCard extends Component<Props> {
   book = this.props.book;
-  // Helps with jumpiness on mobile Chrome instead of using vh
-  jsvh = window.innerHeight * 0.01;
 
   bookCardBody = () => {
     return (
       <Box
-        // height="40vh"
-        // height={this.jsvh * 40}
-        // width="20vh"
-        // width={this.jsvh * 20}
-        // maxW="40vw"
-        // maxH="71.11vw"
         h={225}
         w={112}
-        // margin="auto"
-        borderWidth="1px"
+        // borderWidth={1}
         borderRadius="lg"
         overflow="hidden"
+        boxShadow="lg"
       >
         <Box h="75%" w="100%">
           <Image
             src={this.book.cover_img}
             alt={`${this.book.title} cover image`}
+            borderRadius="lg"
             objectFit="cover"
             w="100%"
             h="100%"
           />
         </Box>
         <Box p="2" h="25%">
-          <Box as="h6" lineHeight="" fontSize="sm" noOfLines={2} isTruncated>
+          <Box
+            as="h6"
+            lineHeight=""
+            fontWeight="light"
+            fontSize="sm"
+            noOfLines={2}
+            isTruncated
+          >
             {this.book.title}
           </Box>
         </Box>

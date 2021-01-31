@@ -1,4 +1,4 @@
-import { Box, Button, Flex, Heading, Spacer } from "@chakra-ui/react";
+import { Box, Button, Flex, Heading, Spacer, Text } from "@chakra-ui/react";
 import React from "react";
 import LogoutButton from "./logout";
 import ThemeSelector from "./themeSelector";
@@ -43,8 +43,14 @@ export default function NavHeader() {
 
   return (
     <Flex>
-      <Box p="4">
-        <Heading size="md">Curator</Heading>
+      <Box p="2">
+        <Heading
+          bgClip="text"
+          bgGradient="linear(to-l, #DD5E89, #F7bb97)"
+          size="xl"
+        >
+          Curator
+        </Heading>
       </Box>
       <Spacer />
       {!isAuthenticated && <LoginButton />}

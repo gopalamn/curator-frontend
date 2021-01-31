@@ -109,7 +109,9 @@ class Profile extends Component<Props, State> {
     this.state.books.forEach((element: any) => {
       booksList.push(
         <Skeleton key={element.id} isLoaded={!this.state.stillLoading}>
-          <BookCard book={element} />
+          <Box position="relative">
+            <BookCard book={element} />
+          </Box>
         </Skeleton>
       );
     });
@@ -119,7 +121,7 @@ class Profile extends Component<Props, State> {
     return (
       <Box>
         <Skeleton isLoaded={!this.state.stillLoading}>
-          <Heading mb={2} size="xs">
+          <Heading py={2} size="sm">
             📚 Books
           </Heading>
         </Skeleton>

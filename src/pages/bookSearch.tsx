@@ -125,13 +125,8 @@ export default function BookSearch() {
                 handleBookSelect(event, element);
 
                 if (event.target.checked) {
-                  // localStorage.setItem(
-                  //   element.book_api_id + "checked",
-                  //   event.target.checked
-                  // );
                   setCountCartBooks(countCartBooks + 1);
                 } else if (!event.target.checked) {
-                  // localStorage.removeItem(element.book_api_id + "checked");
                   setCountCartBooks(countCartBooks - 1);
                 }
               }}
@@ -185,8 +180,16 @@ export default function BookSearch() {
 
   const handleDone = (event: any) => {
     setIsDoneLoading(true);
+
     // Prepare data structure for api request
     let iterateBooks: { [index: string]: any } = cartBooks;
+
+    // Check if the cart is empty and just return home if it is
+    if (Object.keys(iterateBooks).length === 0) {
+      let username = localStorage.getItem("username");
+      history.push(`/p/${username}`);
+    }
+
     let checkoutBooks: any = [];
     Object.entries(iterateBooks).forEach((value: { [index: string]: any }) => {
       delete value[1]["linkActive"];
