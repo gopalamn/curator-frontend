@@ -28,7 +28,7 @@ export default function NewPost() {
           onClick={handleNewPost}
           variant="link"
         >
-          <Text>New Discovery </Text>
+          New Discovery
           <ArrowForwardIcon color="#DB00FF" w={8} />
         </Button>
       )}
