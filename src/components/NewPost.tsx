@@ -22,13 +22,14 @@ export default function NewPost() {
     <Box mb={4} textAlign="left" position="relative">
       {isAuthenticated && isUserProfile && (
         <Button
-          color="purple.500"
+          // color="purple.500"
+          bgGradient="linear(to-r, #7928CA, #DB00FF)"
+          bgClip="text"
           onClick={handleNewPost}
           variant="link"
-          colorScheme="teal"
         >
           <Text>New Discovery </Text>
-          <ArrowForwardIcon w={8} />
+          <ArrowForwardIcon color="#DB00FF" w={8} />
         </Button>
       )}
     </Box>

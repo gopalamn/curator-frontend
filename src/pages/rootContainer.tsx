@@ -14,6 +14,7 @@ import Profile from "./profile";
 import NotFound from "./notFound";
 import MediumChoice from "./mediumChoice";
 import BookSearch from "./bookSearch";
+import SignUpApp from "./signUp";
 
 type Props = {};
 
@@ -35,6 +36,16 @@ export default class rootContainer extends Component<Props> {
                   <Redirect to={`/p/${this.loggedInUser}`} />
                 ) : (
                   <Login />
+                )
+              }
+            />
+            <Route
+              path="/signup"
+              render={() =>
+                !!Cookies.get("accessToken") ? (
+                  <Redirect to={`/p/${this.loggedInUser}`} />
+                ) : (
+                  <SignUpApp />
                 )
               }
             />

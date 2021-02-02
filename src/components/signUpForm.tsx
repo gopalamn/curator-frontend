@@ -8,16 +8,22 @@ import {
   Input,
   Button,
   createStandaloneToast,
+  InputGroup,
+  InputLeftAddon,
 } from "@chakra-ui/react";
 import API from "../api";
 import Cookies from "js-cookie";
 import { useHistory } from "react-router-dom";
 
-export default function LoginApp() {
+export default function SignUp() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [confirmPassword, setConfirmPassword] = useState("");
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState("");
+  const [username, setUsername] = useState("");
+  const [firstname, setFirstname] = useState("");
+  const [lastname, setLastname] = useState("");
 
   const VARIANT_COLOR = "purple";
   let api = API();
@@ -56,7 +62,21 @@ export default function LoginApp() {
     });
   };
 
-  const handleLogin = async (event: any) => {
+  const createUser = async () => {
+    return new Promise<void>((resolve, reject) => {
+      api
+        .addUser(email, username, password, firstname, lastname)
+        .then((response: any) => {
+          if (response.ok) {
+            resolve();
+          } else {
+            reject();
+          }
+        });
+    });
+  };
+
+  const handleSignUp = async (event: any) => {
     event.preventDefault();
     if (email === "" || password === "") {
       const toast = createStandaloneToast();
@@ -70,24 +90,23 @@ export default function LoginApp() {
     } else {
       setIsLoading(true);
       try {
-        // Wait for authentication and then redirect to
+        // Wait for create user and authentication and then redirect to
         // /p/username profile
-        await authenticate().then((data) => {
-          setIsLoading(false);
-          history.push(`/p/${data}`);
+        await createUser().then(() => {
+          authenticate().then((data) => {
+            setIsLoading(false);
+            history.push(`/p/${data}`);
+          });
         });
       } catch (error) {
         const toast = createStandaloneToast();
         toast({
           title: "An error occured.",
-          description: "Email or password is incorrect.",
+          description: "Please try again later",
           status: "error",
           duration: 3000,
           isClosable: true,
         });
-        setError("Invalid email or password");
-        setEmail("");
-        setPassword("");
         setIsLoading(false);
       }
     }
@@ -107,11 +126,11 @@ export default function LoginApp() {
       >
         <Box p={4}>
           <Box textAlign="center">
-            <Heading>Sign In to Your Account</Heading>
+            <Heading>Create an Account</Heading>
           </Box>
           <Box my={8} textAlign="left">
-            <form onSubmit={handleLogin}>
-              <FormControl>
+            <form onSubmit={handleSignUp}>
+              <FormControl isRequired>
                 <FormLabel>Email address</FormLabel>
                 <Input
                   type="email"
@@ -121,15 +140,60 @@ export default function LoginApp() {
                 />
               </FormControl>
 
-              <FormControl mt={4}>
+              <FormControl isRequired mt={4}>
+                <FormLabel>Username</FormLabel>
+                <InputGroup>
+                  <InputLeftAddon children="curator.com/" />
+                  <Input
+                    type="text"
+                    placeholder="Enter a username"
+                    value={username}
+                    onChange={(event) => setUsername(event.target.value)}
+                  />
+                </InputGroup>
+              </FormControl>
+
+              <FormControl d="flex" flexDir="row" isRequired mt={4}>
+                <Box mr={4}>
+                  <FormLabel>Firstname</FormLabel>
+                  <Input
+                    placeholder="Enter your firstname"
+                    value={firstname}
+                    onChange={(event) => setFirstname(event.target.value)}
+                  />
+                </Box>
+                <Box ml={4}>
+                  <FormLabel>Lastname</FormLabel>
+                  <Input
+                    placeholder="Enter your lastname"
+                    value={lastname}
+                    onChange={(event) => setLastname(event.target.value)}
+                  />
+                </Box>
+              </FormControl>
+
+              <FormControl isRequired mt={4}>
                 <FormLabel>Password</FormLabel>
                 <Input
                   type="password"
-                  placeholder="Enter your password"
+                  placeholder="Enter a password"
+                  isInvalid={!!(password !== confirmPassword)}
                   value={password}
                   onChange={(event) => setPassword(event.target.value)}
                 />
               </FormControl>
+
+              <FormControl isRequired mt={4}>
+                <FormLabel>Confirm Password</FormLabel>
+                <Input
+                  type="password"
+                  placeholder="Confirm Password"
+                  value={confirmPassword}
+                  isInvalid={!!(password !== confirmPassword)}
+                  onChange={(event) => setConfirmPassword(event.target.value)}
+                />
+              </FormControl>
+
               <Button
                 isLoading={isLoading}
                 type="submit"
@@ -137,18 +201,18 @@ export default function LoginApp() {
                 width="full"
                 mt={4}
               >
-                Sign In
+                Create Account
               </Button>
             </form>
           </Box>
           <Button
-            onClick={() => history.push("/signup")}
+            onClick={() => history.push("/login")}
             mt={-5}
             fontSize="sm"
             textAlign="center"
             variant="link"
           >
-            Create Account
+            Sign in to Curator
           </Button>
         </Box>
       </Box>

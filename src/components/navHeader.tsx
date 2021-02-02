@@ -27,7 +27,11 @@ export default function NavHeader() {
 
   const LoginButton = () => {
     let isLoginScreen = false;
-    if (location.pathname === "/login") {
+    if (
+      location.pathname === "/login" ||
+      location.pathname === "/signup" ||
+      location.pathname === "/"
+    ) {
       isLoginScreen = true;
     }
     return (
@@ -46,7 +50,7 @@ export default function NavHeader() {
       <Box p="2">
         <Heading
           bgClip="text"
-          bgGradient="linear(to-l, #DD5E89, #F7bb97)"
+          bgGradient="linear(to-r, #7928CA, #DB00FF)"
           size="xl"
         >
           Curator
